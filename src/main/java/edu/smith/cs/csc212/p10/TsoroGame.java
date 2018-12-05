@@ -272,7 +272,7 @@ public class TsoroGame extends GFX {
 
 			break;
 		case Tie:
-			this.message.setString("Mactch pieces by moving them!");
+			this.message.setString("Match pieces by moving them!");
 			break;
 		default:
 			break;
