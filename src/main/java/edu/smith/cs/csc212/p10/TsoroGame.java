@@ -65,7 +65,7 @@ public class TsoroGame extends GFX {
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(rightLeftD, TTTMark.Player1)) {
+		if (allMarked(verticalD, TTTMark.Player1)) {
 			return true;
 		}
 
@@ -96,7 +96,7 @@ public class TsoroGame extends GFX {
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(rightLeftD, TTTMark.Player2)) {
+		if (allMarked(verticalD, TTTMark.Player2)) {
 			return true;
 		}
 
