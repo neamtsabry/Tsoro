@@ -3,6 +3,7 @@ package edu.smith.cs.csc212.p10;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,9 @@ public class TsoroGame extends GFX {
 	TState state = TState.Player1Turn;
 	List<List<TicTacToeCell>> grid = new ArrayList<>();
 	TextBox message = new TextBox("Hello World!");
+	
+	
+	
 
 	public List<TicTacToeCell> getAllCells() {
 		List<TicTacToeCell> flatList = new ArrayList<>();
@@ -117,12 +121,17 @@ public class TsoroGame extends GFX {
 		TTTMark symbol;
 		boolean mouseHover;
 		TextBox display;
+		Token p1token;
+		Token p2token;
 
 		public TicTacToeCell(int x, int y, int w, int h) {
 			this.area = new Rectangle2D.Double(x, y, w, h);
 			this.mouseHover = false;
 			this.symbol = TTTMark.Empty;
 			this.display = new TextBox("X");
+			this.p2token= new Token (Color.red);
+			this.p1token=new Token (Color.BLUE);
+			
 		}
 
 		public boolean inPlay() {
@@ -136,10 +145,12 @@ public class TsoroGame extends GFX {
 				this.display.setString("_");
 				break;
 			case Player1:
-				this.display.setString("X");
+				//this.display.setString("X");
+				this.p1token.draw(g, Color.blue);
 				break;
 			case Player2:
-				this.display.setString("O");
+//				this.display.setString("O");
+				this.p2token.draw(g, Color.red);
 				break;
 			default:
 				break;
@@ -157,6 +168,8 @@ public class TsoroGame extends GFX {
 			this.display.setFontSize(70.0);
 			this.display.setColor(Color.black);
 			this.display.draw(g);
+			
+			
 		}
 
 		public boolean contains(IntPoint mouse) {
