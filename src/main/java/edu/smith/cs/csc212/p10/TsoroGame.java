@@ -154,7 +154,6 @@ public class TsoroGame extends GFX {
 				break;
 			case Player1:
 				this.display.setString("X");
-
 				break;
 			case Player2:
 //				p2Tokens-=1;
@@ -269,10 +268,9 @@ public class TsoroGame extends GFX {
 			break;
 		case Player2Win:
 			this.message.setString("Player 2 Has Won");
-
 			break;
 		case Tie:
-			this.message.setString("Mactch pieces by moving them!");
+			this.message.setString("Match pieces by moving them!");
 			break;
 		default:
 			break;
