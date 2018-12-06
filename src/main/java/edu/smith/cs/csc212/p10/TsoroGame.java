@@ -3,10 +3,13 @@ package edu.smith.cs.csc212.p10;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import me.jjfoley.gfx.GFX;
 import me.jjfoley.gfx.IntPoint;
@@ -19,6 +22,22 @@ public class TsoroGame extends GFX {
 	}
 	public static int p1Tokens=3;
 	public static int p2Tokens=3;
+	public List<List<TicTacToeCell>> neighbors0 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors1 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors2 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors3 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors4 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors5 = new ArrayList<>();
+
+	public List<List<TicTacToeCell>> neighbors6 = new ArrayList<>();
+//public List<List<List<TicTacToeCell>>> neighbors=new ArrayList<>();
+public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashMap<List<TicTacToeCell>, List<List<TicTacToeCell>>>();
+
 	TState state = TState.Player1Turn;
 	List<List<TicTacToeCell>> grid = new ArrayList<>();
 	TextBox message = new TextBox("Hello World!");
@@ -134,12 +153,14 @@ public class TsoroGame extends GFX {
 		TTTMark symbol;
 		boolean mouseHover;
 		TextBox display;
+		Shape p1Circle;
 
 		public TicTacToeCell(int x, int y, int w, int h) {
 			this.area = new Rectangle2D.Double(x, y, w, h);
 			this.mouseHover = false;
 			this.symbol = TTTMark.Empty;
 			this.display = new TextBox("X");
+//			this.p1Circle= new Ellipse();
 		}
 
 		public boolean inPlay() {
@@ -156,8 +177,7 @@ public class TsoroGame extends GFX {
 				this.display.setString("X");
 				break;
 			case Player2:
-//				p2Tokens-=1;
-//				System.out.println("p2 has"+p1Tokens);
+
 				this.display.setString("O");
 				break;
 			
@@ -193,23 +213,40 @@ public class TsoroGame extends GFX {
 		int size = this.getWidth() / 11;
 //		for (int x = 0; x < 8; x++) {
 			List<TicTacToeCell> row = new ArrayList<>();
+			
 			row.add(new TicTacToeCell(5 * size, 1 * size, size - 2, size - 2));
 			this.grid.add(row);
-
+			neighbors1.add(row);
+			neighbors2.add(row);
+			neighbors3.add(row);
+			
 			row.add(new TicTacToeCell(3 * size, 3 * size, size - 2, size - 2));
 			this.grid.add(row);
+			neighbors0.add(row);
+			neighbors2.add(row);
+			neighbors4.add(row);
 			row.add(new TicTacToeCell(5 * size, 3 * size, size - 2, size - 2));
 			this.grid.add(row);
+			neighbors0.add(row);
+			neighbors2.add(row);
+			neighbors6.add(row);
 			row.add(new TicTacToeCell(7 * size, 3 * size, size - 2, size - 2));
 			this.grid.add(row);
+			neighbors1.add(row);
+			neighbors5.add(row);
 			row.add(new TicTacToeCell(1 * size, 5 * size, size - 2, size - 2));
 			this.grid.add(row);
+			neighbors2.add(row);
+			neighbors6.add(row);
+			neighbors4.add(row);
 			row.add(new TicTacToeCell(5 * size, 5 * size, size - 2, size - 2));
 			this.grid.add(row);
 			row.add(new TicTacToeCell(9 * size, 5 * size, size - 2, size - 2));
 
 			this.grid.add(row);
-//		}
+			neighbors3.add(row);
+			neighbors5.add(row);
+			neighbors.put(this.grid.get(1),neighbors0);
 	}
 
 	@Override
