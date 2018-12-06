@@ -22,6 +22,7 @@ public class TsoroGame extends GFX {
 	}
 	public static int p1Tokens = 0;
 	public static int p2Tokens = 0;
+	
 	public List<List<TicTacToeCell>> neighbors0 = new ArrayList<>();
 
 	public List<List<TicTacToeCell>> neighbors1 = new ArrayList<>();
@@ -51,7 +52,7 @@ public class TsoroGame extends GFX {
 
 	}
 
-	public boolean allMarked(List<TicTacToeCell> row, TMark marker) {
+	public boolean allMarked(List<TicTacToeCell> row, TTTMark marker) {
 		for (TicTacToeCell cell : row) {
 			if (cell.symbol == marker) {
 				continue;
@@ -68,28 +69,28 @@ public class TsoroGame extends GFX {
 //		p1Tokens-=1;
 		List<TicTacToeCell> midRow = Arrays.asList(this.grid.get(1).get(1), this.grid.get(2).get(2),
 				this.grid.get(3).get(3));
-		if (allMarked(midRow, TMark.Player1)) {
+		if (allMarked(midRow, TTTMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> botRow = Arrays.asList(this.grid.get(4).get(4), this.grid.get(5).get(5),
 				this.grid.get(6).get(6));
-		if (allMarked(botRow, TMark.Player1)) {
+		if (allMarked(botRow, TTTMark.Player1)) {
 			return true;
 		}
 
 		List<TicTacToeCell> leftRightD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(1).get(1),
 				this.grid.get(4).get(4));
-		if (allMarked(leftRightD, TMark.Player1)) {
+		if (allMarked(leftRightD, TTTMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> rightLeftD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(3).get(3),
 				this.grid.get(6).get(6));
-		if (allMarked(rightLeftD, TMark.Player1)) {
+		if (allMarked(rightLeftD, TTTMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(verticalD, TMark.Player1)) {
+		if (allMarked(verticalD, TTTMark.Player1)) {
 			return true;
 		}
 
@@ -111,28 +112,28 @@ public class TsoroGame extends GFX {
 //		p2Tokens-=1;
 		List<TicTacToeCell> midRow = Arrays.asList(this.grid.get(1).get(1), this.grid.get(2).get(2),
 				this.grid.get(3).get(3));
-		if (allMarked(midRow, TMark.Player2)) {
+		if (allMarked(midRow, TTTMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> botRow = Arrays.asList(this.grid.get(4).get(4), this.grid.get(5).get(5),
 				this.grid.get(6).get(6));
-		if (allMarked(botRow, TMark.Player2)) {
+		if (allMarked(botRow, TTTMark.Player2)) {
 			return true;
 		}
 
 		List<TicTacToeCell> leftRightD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(1).get(1),
 				this.grid.get(4).get(4));
-		if (allMarked(leftRightD, TMark.Player2)) {
+		if (allMarked(leftRightD, TTTMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> rightLeftD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(3).get(3),
 				this.grid.get(6).get(6));
-		if (allMarked(rightLeftD, TMark.Player2)) {
+		if (allMarked(rightLeftD, TTTMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(verticalD, TMark.Player2)) {
+		if (allMarked(verticalD, TTTMark.Player2)) {
 			return true;
 		}
 
@@ -151,7 +152,7 @@ public class TsoroGame extends GFX {
 
 	static class TicTacToeCell {
 		Rectangle2D area;
-		TMark symbol;
+		TTTMark symbol;
 		boolean mouseHover;
 		TextBox display;
 		Shape p1Circle;
@@ -159,13 +160,13 @@ public class TsoroGame extends GFX {
 		public TicTacToeCell(int x, int y, int w, int h) {
 			this.area = new Rectangle2D.Double(x, y, w, h);
 			this.mouseHover = false;
-			this.symbol = TMark.Empty;
+			this.symbol = TTTMark.Empty;
 			this.display = new TextBox("X");
 //			this.p1Circle= new Ellipse();
 		}
 
 		public boolean inPlay() {
-			return symbol == TMark.Empty;
+			return symbol == TTTMark.Empty;
 		}
 
 		public void draw(Graphics2D g) {
@@ -188,7 +189,7 @@ public class TsoroGame extends GFX {
 
 			}
 
-			if (this.symbol == TMark.Empty && mouseHover) {
+			if (this.symbol == TTTMark.Empty && mouseHover) {
 				g.setColor(Color.green);
 			} else {
 				g.setColor(Color.yellow);
@@ -288,12 +289,12 @@ public class TsoroGame extends GFX {
 					// More intelligence needed:
 					if (this.state == TState.Player1Turn) {
 						p1Tokens -= 1;
-						cell.symbol = TMark.Player1;
+						cell.symbol = TTTMark.Player1;
 						this.state = TState.Player2Turn;
 						stateChanged = true;
 					} else {
 						p2Tokens -= 1;
-						cell.symbol = TMark.Player2;
+						cell.symbol = TTTMark.Player2;
 						this.state = TState.Player1Turn;
 						stateChanged = true;
 					}
@@ -313,7 +314,7 @@ public class TsoroGame extends GFX {
 			} else if (this.player2Wins()) {
 				this.state = TState.Player2Win;
 			} else if (this.boardIsFull()) {
-				this.state = TState.MoveTokAround;
+				this.state = TState.Tie;
 			}
 		}
 
@@ -332,7 +333,7 @@ public class TsoroGame extends GFX {
 			this.message.setString("Player 2 Has Won");
 
 			break;
-		case MoveTokAround:
+		case Tie:
 			this.message.setString("Match pieces by moving them!");
 			break;
 		default:
