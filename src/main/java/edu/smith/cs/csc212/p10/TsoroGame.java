@@ -1,6 +1,5 @@
 package edu.smith.cs.csc212.p10;
 
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -20,8 +19,9 @@ public class TsoroGame extends GFX {
 	public TsoroGame() {
 		this.setupGame();
 	}
-	public static int p1Tokens=3;
-	public static int p2Tokens=3;
+
+	public static int p1Tokens = 3;
+	public static int p2Tokens = 3;
 	public List<List<TicTacToeCell>> neighbors0 = new ArrayList<>();
 
 	public List<List<TicTacToeCell>> neighbors1 = new ArrayList<>();
@@ -36,19 +36,19 @@ public class TsoroGame extends GFX {
 
 	public List<List<TicTacToeCell>> neighbors6 = new ArrayList<>();
 //public List<List<List<TicTacToeCell>>> neighbors=new ArrayList<>();
-public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashMap<List<TicTacToeCell>, List<List<TicTacToeCell>>>();
+	public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashMap<List<TicTacToeCell>, List<List<TicTacToeCell>>>();
 
 	TState state = TState.Player1Turn;
 	List<List<TicTacToeCell>> grid = new ArrayList<>();
 	TextBox message = new TextBox("Hello World!");
-	
+
 	public List<TicTacToeCell> getAllCells() {
 		List<TicTacToeCell> flatList = new ArrayList<>();
 		for (List<TicTacToeCell> row : grid) {
 			flatList.addAll(row);
 		}
 		return flatList;
-		
+
 	}
 
 	public boolean allMarked(List<TicTacToeCell> row, TTTMark marker) {
@@ -95,12 +95,13 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 
 		return false;
 	}
-	public static boolean  tokensFinished() {
-		//tokenCount-=1;
-		System.out.println("p1 has"+p1Tokens);
-		System.out.println("p2 has"+p2Tokens);
-		
-		if (p1Tokens+p2Tokens==0) {
+
+	public static boolean tokensFinished() {
+		// tokenCount-=1;
+		System.out.println("p1 has" + p1Tokens);
+		System.out.println("p2 has" + p2Tokens);
+
+		if (p1Tokens + p2Tokens == 0) {
 			return true;
 		}
 		return false;
@@ -181,10 +182,9 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 
 				this.display.setString("O");
 				break;
-			
+
 			default:
 				break;
-				
 
 			}
 
@@ -199,7 +199,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 			this.display.setFontSize(70.0);
 			this.display.setColor(Color.black);
 			this.display.draw(g);
-			
+
 		}
 
 		public boolean contains(IntPoint mouse) {
@@ -213,41 +213,65 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 	public void setupGame() {
 		int size = this.getWidth() / 11;
 //		for (int x = 0; x < 8; x++) {
-			List<TicTacToeCell> row = new ArrayList<>();
-			
-			row.add(new TicTacToeCell(5 * size, 1 * size, size - 2, size - 2));
-			this.grid.add(row);
-			neighbors1.add(row);
-			neighbors2.add(row);
-			neighbors3.add(row);
-			
-			row.add(new TicTacToeCell(3 * size, 3 * size, size - 2, size - 2));
-			this.grid.add(row);
-			neighbors0.add(row);
-			neighbors2.add(row);
-			neighbors4.add(row);
-			row.add(new TicTacToeCell(5 * size, 3 * size, size - 2, size - 2));
-			this.grid.add(row);
-			neighbors0.add(row);
-			neighbors2.add(row);
-			neighbors6.add(row);
-			row.add(new TicTacToeCell(7 * size, 3 * size, size - 2, size - 2));
-			this.grid.add(row);
-			neighbors1.add(row);
-			neighbors5.add(row);
-			row.add(new TicTacToeCell(1 * size, 5 * size, size - 2, size - 2));
-			this.grid.add(row);
-			neighbors2.add(row);
-			neighbors6.add(row);
-			neighbors4.add(row);
-			row.add(new TicTacToeCell(5 * size, 5 * size, size - 2, size - 2));
-			this.grid.add(row);
-			row.add(new TicTacToeCell(9 * size, 5 * size, size - 2, size - 2));
+		List<TicTacToeCell> row = new ArrayList<>();
+		List<TicTacToeCell> temp = new ArrayList<>();
+		// Grid 0
+		row.add(new TicTacToeCell(5 * size, 1 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(5 * size, 1 * size, size - 2, size - 2));
 
-			this.grid.add(row);
-			neighbors3.add(row);
-			neighbors5.add(row);
-			neighbors.put(this.grid.get(1),neighbors0);
+		this.grid.add(row);
+		neighbors1.add(temp);
+		neighbors2.add(temp);
+		neighbors3.add(temp);
+		temp.clear();
+		// grid 1
+		row.add(new TicTacToeCell(3 * size, 3 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(3 * size, 3 * size, size - 2, size - 2));
+		this.grid.add(row);
+		neighbors0.add(temp);
+		neighbors2.add(temp);
+		neighbors4.add(temp);
+		temp.clear();
+		// grid 2
+		row.add(new TicTacToeCell(5 * size, 3 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(5 * size, 3 * size, size - 2, size - 2));
+		this.grid.add(row);
+		neighbors0.add(temp);
+		neighbors2.add(temp);
+		neighbors6.add(temp);
+		temp.clear();
+		// grid 3
+		row.add(new TicTacToeCell(7 * size, 3 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(7 * size, 3 * size, size - 2, size - 2));
+		this.grid.add(temp);
+		neighbors1.add(temp);
+		neighbors5.add(temp);
+		temp.clear();
+		// grid 4
+		row.add(new TicTacToeCell(1 * size, 5 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(1 * size, 5 * size, size - 2, size - 2));
+		this.grid.add(row);
+		neighbors1.add(temp);
+		neighbors5.add(temp);
+		temp.clear();
+		// grid 5
+		row.add(new TicTacToeCell(5 * size, 5 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(5 * size, 5 * size, size - 2, size - 2));
+		this.grid.add(row);
+		neighbors2.add(temp);
+		neighbors6.add(temp);
+		neighbors4.add(temp);
+		temp.clear();
+
+		// grid 6
+		row.add(new TicTacToeCell(9 * size, 5 * size, size - 2, size - 2));
+		temp.add(new TicTacToeCell(9 * size, 5 * size, size - 2, size - 2));
+		this.grid.add(row);
+		neighbors3.add(temp);
+		neighbors5.add(temp);
+		temp.clear();
+
+		neighbors.put(this.grid.get(1), neighbors0);
 	}
 
 	@Override
@@ -263,12 +287,12 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 				if (cell.inPlay() && cell.contains(click)) {
 					// More intelligence needed:
 					if (this.state == TState.Player1Turn) {
-						p1Tokens-=1;
+						p1Tokens -= 1;
 						cell.symbol = TTTMark.Player1;
 						this.state = TState.Player2Turn;
 						stateChanged = true;
 					} else {
-						p2Tokens-=1;
+						p2Tokens -= 1;
 						cell.symbol = TTTMark.Player2;
 						this.state = TState.Player1Turn;
 						stateChanged = true;
