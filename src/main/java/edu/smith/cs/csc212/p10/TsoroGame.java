@@ -178,8 +178,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 
 				break;
 			case Player2:
-//				p2Tokens-=1;
-//				System.out.println("p2 has"+p1Tokens);
+
 				this.display.setString("O");
 				break;
 			
@@ -249,7 +248,6 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 			neighbors3.add(row);
 			neighbors5.add(row);
 			neighbors.put(this.grid.get(1),neighbors0);
-			//		}
 	}
 
 	@Override
