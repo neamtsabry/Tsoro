@@ -20,8 +20,9 @@ public class TsoroGame extends GFX {
 	public TsoroGame() {
 		this.setupGame();
 	}
-	public static int p1Tokens=3;
-	public static int p2Tokens=3;
+	public static int p1Tokens=0;
+	public static int p2Tokens=0;
+	
 	public List<List<TicTacToeCell>> neighbors0 = new ArrayList<>();
 
 	public List<List<TicTacToeCell>> neighbors1 = new ArrayList<>();
@@ -35,8 +36,8 @@ public class TsoroGame extends GFX {
 	public List<List<TicTacToeCell>> neighbors5 = new ArrayList<>();
 
 	public List<List<TicTacToeCell>> neighbors6 = new ArrayList<>();
-//public List<List<List<TicTacToeCell>>> neighbors=new ArrayList<>();
-public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashMap<List<TicTacToeCell>, List<List<TicTacToeCell>>>();
+	//public List<List<List<TicTacToeCell>>> neighbors=new ArrayList<>();
+	public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashMap<>();
 
 	TState state = TState.Player1Turn;
 	List<List<TicTacToeCell>> grid = new ArrayList<>();
@@ -51,7 +52,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 		
 	}
 
-	public boolean allMarked(List<TicTacToeCell> row, TTTMark marker) {
+	public boolean allMarked(List<TicTacToeCell> row, TMark marker) {
 		for (TicTacToeCell cell : row) {
 			if (cell.symbol == marker) {
 				continue;
@@ -68,28 +69,28 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 //		p1Tokens-=1;
 		List<TicTacToeCell> midRow = Arrays.asList(this.grid.get(1).get(1), this.grid.get(2).get(2),
 				this.grid.get(3).get(3));
-		if (allMarked(midRow, TTTMark.Player1)) {
+		if (allMarked(midRow, TMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> botRow = Arrays.asList(this.grid.get(4).get(4), this.grid.get(5).get(5),
 				this.grid.get(6).get(6));
-		if (allMarked(botRow, TTTMark.Player1)) {
+		if (allMarked(botRow, TMark.Player1)) {
 			return true;
 		}
 
 		List<TicTacToeCell> leftRightD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(1).get(1),
 				this.grid.get(4).get(4));
-		if (allMarked(leftRightD, TTTMark.Player1)) {
+		if (allMarked(leftRightD, TMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> rightLeftD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(3).get(3),
 				this.grid.get(6).get(6));
-		if (allMarked(rightLeftD, TTTMark.Player1)) {
+		if (allMarked(rightLeftD, TMark.Player1)) {
 			return true;
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(verticalD, TTTMark.Player1)) {
+		if (allMarked(verticalD, TMark.Player1)) {
 			return true;
 		}
 
@@ -100,7 +101,9 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 		System.out.println("p1 has"+p1Tokens);
 		System.out.println("p2 has"+p2Tokens);
 		
-		if (p1Tokens+p2Tokens==0) {
+		if (p1Tokens+p2Tokens==6) {
+			p1Tokens = 0;
+			p2Tokens = 0;
 			return true;
 		}
 		return false;
@@ -110,28 +113,28 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 //		p2Tokens-=1;
 		List<TicTacToeCell> midRow = Arrays.asList(this.grid.get(1).get(1), this.grid.get(2).get(2),
 				this.grid.get(3).get(3));
-		if (allMarked(midRow, TTTMark.Player2)) {
+		if (allMarked(midRow, TMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> botRow = Arrays.asList(this.grid.get(4).get(4), this.grid.get(5).get(5),
 				this.grid.get(6).get(6));
-		if (allMarked(botRow, TTTMark.Player2)) {
+		if (allMarked(botRow, TMark.Player2)) {
 			return true;
 		}
 
 		List<TicTacToeCell> leftRightD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(1).get(1),
 				this.grid.get(4).get(4));
-		if (allMarked(leftRightD, TTTMark.Player2)) {
+		if (allMarked(leftRightD, TMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> rightLeftD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(3).get(3),
 				this.grid.get(6).get(6));
-		if (allMarked(rightLeftD, TTTMark.Player2)) {
+		if (allMarked(rightLeftD, TMark.Player2)) {
 			return true;
 		}
 		List<TicTacToeCell> verticalD = Arrays.asList(this.grid.get(0).get(0), this.grid.get(2).get(2),
 				this.grid.get(5).get(5));
-		if (allMarked(verticalD, TTTMark.Player2)) {
+		if (allMarked(verticalD, TMark.Player2)) {
 			return true;
 		}
 
@@ -150,7 +153,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 
 	static class TicTacToeCell {
 		Rectangle2D area;
-		TTTMark symbol;
+		TMark symbol;
 		boolean mouseHover;
 		TextBox display;
 		Shape p1Circle;
@@ -158,13 +161,13 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 		public TicTacToeCell(int x, int y, int w, int h) {
 			this.area = new Rectangle2D.Double(x, y, w, h);
 			this.mouseHover = false;
-			this.symbol = TTTMark.Empty;
+			this.symbol = TMark.Empty;
 			this.display = new TextBox("X");
 //			this.p1Circle= new Ellipse();
 		}
 
 		public boolean inPlay() {
-			return symbol == TTTMark.Empty;
+			return symbol == TMark.Empty;
 		}
 
 		public void draw(Graphics2D g) {
@@ -177,17 +180,14 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 				this.display.setString("X");
 				break;
 			case Player2:
-
 				this.display.setString("O");
 				break;
 			
 			default:
 				break;
-				
-
 			}
 
-			if (this.symbol == TTTMark.Empty && mouseHover) {
+			if (this.symbol == TMark.Empty && mouseHover) {
 				g.setColor(Color.green);
 			} else {
 				g.setColor(Color.yellow);
@@ -247,6 +247,8 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 			neighbors3.add(row);
 			neighbors5.add(row);
 			neighbors.put(this.grid.get(1),neighbors0);
+			
+			System.out.println(neighbors1);
 	}
 
 	@Override
@@ -262,14 +264,19 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 				if (cell.inPlay() && cell.contains(click)) {
 					// More intelligence needed:
 					if (this.state == TState.Player1Turn) {
-						p1Tokens-=1;
-						cell.symbol = TTTMark.Player1;
+						p1Tokens+=1;
+						cell.symbol = TMark.Player1;
 						this.state = TState.Player2Turn;
 						stateChanged = true;
-					} else {
-						p2Tokens-=1;
-						cell.symbol = TTTMark.Player2;
+					} else if(this.state == TState.Player2Turn) {
+						p2Tokens+=1;
+						cell.symbol = TMark.Player2;
 						this.state = TState.Player1Turn;
+						stateChanged = true;
+					} else {
+						cell.symbol = TMark.Empty;
+						this.state = TState.MoveTokAround;
+						this.state.isPlaying();
 						stateChanged = true;
 					}
 				}
@@ -288,7 +295,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 			} else if (this.player2Wins()) {
 				this.state = TState.Player2Win;
 			} else if (this.boardIsFull()) {
-				this.state = TState.Tie;
+				this.state = TState.MoveTokAround;
 			}
 		}
 
@@ -306,11 +313,28 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 		case Player2Win:
 			this.message.setString("Player 2 Has Won");
 			break;
-		case Tie:
+		case MoveTokAround:
 			this.message.setString("Match pieces by moving them!");
+			this.adjSpace();
+			break;
+		case OutOfMoves:
+			this.message.setString("Out of moves!");
 			break;
 		default:
 			break;
+		}
+	}
+	
+	public void adjSpace() {
+		IntPoint mouse = this.getMouseLocation();
+		IntPoint click = this.processClick();
+		
+		for (TicTacToeCell cell : this.getAllCells()) {
+			cell.mouseHover = cell.contains(mouse);
+
+			if (cell.inPlay() && cell.contains(click)) {
+				this.state = TMark.Empty;
+			}
 		}
 	}
 
@@ -318,6 +342,7 @@ public Map<List<TicTacToeCell>, List<List<TicTacToeCell>>> neighbors = new HashM
 	public void draw(Graphics2D g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		//g.fillOval(0, 0, this.getWidth(), this.getHeight());
 
 		for (TicTacToeCell cell : this.getAllCells()) {
 			cell.draw(g);
