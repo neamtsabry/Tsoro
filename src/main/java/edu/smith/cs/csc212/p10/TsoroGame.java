@@ -173,8 +173,8 @@ public class TsoroGame extends GFX {
 			this.mouseHover = false;
 			this.symbol = TMark.Empty;
 			this.display = new TextBox("_");
-			this.p2token= new Token (Color.red);
-			this.p1token=new Token (Color.BLUE);
+			this.p2token= new Token (Color.blue);
+			this.p1token=new Token (Color.red);
 			
 			
 
