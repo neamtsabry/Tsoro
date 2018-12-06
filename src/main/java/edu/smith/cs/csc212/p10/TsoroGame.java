@@ -2,7 +2,11 @@ package edu.smith.cs.csc212.p10;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+
+import java.awt.geom.Ellipse2D;
+
 import java.awt.Shape;
+
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,9 +24,10 @@ public class TsoroGame extends GFX {
 		this.setupGame();
 	}
 
-	public static int p1Tokens = 0;
-	public static int p2Tokens = 0;
-
+	
+	public static int p1Tokens=0;
+	public static int p2Tokens=0;
+	
 	public List<TsoroCell> neighborsA = new ArrayList<>();
 	public List<TsoroCell> neighborsB = new ArrayList<>();
 	public List<TsoroCell> neighborsC = new ArrayList<>();
@@ -37,9 +42,14 @@ public class TsoroGame extends GFX {
 	List<TsoroCell> grid = new ArrayList<>();
 	TextBox message = new TextBox("Hello World!");
 
+
+	
 	public List<TsoroCell> getAllCells() {
 		return grid;
 	}
+		
+
+
 
 	public boolean allMarked(List<TsoroCell> row, TMark marker) {
 		for (TsoroCell cell : row) {
@@ -144,10 +154,12 @@ public class TsoroGame extends GFX {
 		boolean mouseHover;
 		boolean mouseHover2;
 		TextBox display;
-		Shape p1Circle;
-
+		Token p1token;
+		Token p2token;
 		int x;
 		int y;
+
+
 
 		public TsoroCell(int x, int y, int w, int h) {
 			this.x = x;
@@ -155,10 +167,14 @@ public class TsoroGame extends GFX {
 			this.area = new Rectangle2D.Double(x, y, w, h);
 			this.mouseHover = false;
 			this.mouseHover2 = false;
-
 			this.symbol = TMark.Empty;
-			this.display = new TextBox("X");
+			this.display = new TextBox("_");
+			this.p2token= new Token (Color.blue);
+			this.p1token=new Token (Color.red);
+
 		}
+
+
 
 		public int hashCode() {
 			return Integer.hashCode(x) + Integer.hashCode(y);
@@ -177,21 +193,7 @@ public class TsoroGame extends GFX {
 		}
 
 		public void draw(Graphics2D g) {
-
-			switch (this.symbol) {
-			case Empty:
-				this.display.setString("_");
-				break;
-			case Player1:
-				this.display.setString("X");
-				break;
-			case Player2:
-				this.display.setString("O");
-				break;
-
-			default:
-				break;
-			}
+			
 
 			if (mouseHover2) {
 				g.setColor(Color.cyan);
@@ -202,12 +204,28 @@ public class TsoroGame extends GFX {
 			}
 			g.fill(this.area);
 
+			switch (this.symbol) {
+			case Empty:
+				this.display.setString("_");
+				break;
+			case Player1:
+				this.p1token.draw(g, area);
+				break;
+			case Player2:
+				this.p2token.draw(g, area);
+				break;
+			
+			default:
+				break;
+			}
 			this.display.centerInside(this.area);
 			this.display.setFontSize(70.0);
 			this.display.setColor(Color.black);
 			this.display.draw(g);
 
 		}
+			
+
 
 		public boolean contains(IntPoint mouse) {
 			if (mouse == null) {
@@ -260,7 +278,7 @@ public class TsoroGame extends GFX {
 		this.grid.add(G);
 		neighborsD.add(G);
 		neighborsF.add(G);
-
+		
 		neighbors.put(A, neighborsA);
 		neighbors.put(B, neighborsB);
 		neighbors.put(C, neighborsA);
@@ -300,6 +318,8 @@ public class TsoroGame extends GFX {
 				}
 			}
 		} else {
+
+
 
 //			if (click != null) {
 //				this.state = TState.Player1Turn;
@@ -368,7 +388,6 @@ public class TsoroGame extends GFX {
 			if (cell.mouseHover) {
 				for (TsoroCell n : adjacents) {
 					n.mouseHover2 = true;
-					//System.out.println(cell);
 				}
 			}
 
@@ -377,6 +396,7 @@ public class TsoroGame extends GFX {
 				TMark usedToBe = cell.symbol;
 				cell.symbol = TMark.Empty;
 				TsoroCell bestNeighbor = findEmpty(adjacents);
+
 				if (bestNeighbor == null) {
 					continue;
 				}
