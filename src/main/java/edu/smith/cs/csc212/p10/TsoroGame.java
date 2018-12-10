@@ -1,11 +1,10 @@
 package edu.smith.cs.csc212.p10;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import java.awt.geom.Ellipse2D;
-
-import java.awt.Shape;
+import java.awt.geom.Line2D;
 
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -25,8 +24,10 @@ public class TsoroGame extends GFX {
 	}
 
 	
-	public static int p1Tokens=0;
-	public static int p2Tokens=0;
+	public static int p1Tokens = 0;
+	public static int p2Tokens = 0;
+	public static int p1score = 0;
+	public static int p2score = 0;
 	
 	public List<TsoroCell> neighborsA = new ArrayList<>();
 	public List<TsoroCell> neighborsB = new ArrayList<>();
@@ -41,15 +42,10 @@ public class TsoroGame extends GFX {
 	TState state = TState.Player1Turn;
 	List<TsoroCell> grid = new ArrayList<>();
 	TextBox message = new TextBox("Hello World!");
-
-
 	
 	public List<TsoroCell> getAllCells() {
 		return grid;
 	}
-		
-
-
 
 	public boolean allMarked(List<TsoroCell> row, TMark marker) {
 		for (TsoroCell cell : row) {
@@ -60,37 +56,6 @@ public class TsoroGame extends GFX {
 			}
 		}
 		return true;
-	}
-
-	public boolean player1Wins() {
-		List<TsoroCell> midRow = Arrays.asList(this.grid.get(1), this.grid.get(2),
-				this.grid.get(3));
-		if (allMarked(midRow, TMark.Player1)) {
-			return true;
-		}
-		List<TsoroCell> botRow = Arrays.asList(this.grid.get(4), this.grid.get(5),
-				this.grid.get(6));
-		if (allMarked(botRow, TMark.Player1)) {
-			return true;
-		}
-
-		List<TsoroCell> leftRightD = Arrays.asList(this.grid.get(0), this.grid.get(1),
-				this.grid.get(4));
-		if (allMarked(leftRightD, TMark.Player1)) {
-			return true;
-		}
-		List<TsoroCell> rightLeftD = Arrays.asList(this.grid.get(0), this.grid.get(3),
-				this.grid.get(6));
-		if (allMarked(rightLeftD, TMark.Player1)) {
-			return true;
-		}
-		List<TsoroCell> verticalD = Arrays.asList(this.grid.get(0), this.grid.get(2),
-				this.grid.get(5));
-		if (allMarked(verticalD, TMark.Player1)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public static boolean tokensFinished() {
@@ -106,32 +71,32 @@ public class TsoroGame extends GFX {
 		return false;
 	}
 
-	public boolean player2Wins() {
+	public boolean playerWins(TMark player) {
 //		p2Tokens-=1;
 		List<TsoroCell> midRow = Arrays.asList(this.grid.get(1), this.grid.get(2),
 				this.grid.get(3));
-		if (allMarked(midRow, TMark.Player2)) {
+		if (allMarked(midRow, player)) {
 			return true;
 		}
 		List<TsoroCell> botRow = Arrays.asList(this.grid.get(4), this.grid.get(5),
 				this.grid.get(6));
-		if (allMarked(botRow, TMark.Player2)) {
+		if (allMarked(botRow, player)) {
 			return true;
 		}
 
 		List<TsoroCell> leftRightD = Arrays.asList(this.grid.get(0), this.grid.get(1),
 				this.grid.get(4));
-		if (allMarked(leftRightD, TMark.Player2)) {
+		if (allMarked(leftRightD, player)) {
 			return true;
 		}
 		List<TsoroCell> rightLeftD = Arrays.asList(this.grid.get(0), this.grid.get(3),
 				this.grid.get(6));
-		if (allMarked(rightLeftD, TMark.Player2)) {
+		if (allMarked(rightLeftD, player)) {
 			return true;
 		}
 		List<TsoroCell> verticalD = Arrays.asList(this.grid.get(0), this.grid.get(2),
 				this.grid.get(5));
-		if (allMarked(verticalD, TMark.Player2)) {
+		if (allMarked(verticalD, player)) {
 			return true;
 		}
 
@@ -140,16 +105,10 @@ public class TsoroGame extends GFX {
 
 	public boolean boardIsFull() {
 		return tokensFinished();
-//		for (TicTacToeCell cell : this.getAllCells()) {
-//			if (cell.inPlay()) {
-//				return false;
-//			}
-//		}
-//		return true;
 	}
 
 	static class TsoroCell {
-		Rectangle2D area;
+		Ellipse2D area;
 		TMark symbol;
 		boolean mouseHover;
 		boolean mouseHover2;
@@ -158,23 +117,21 @@ public class TsoroGame extends GFX {
 		Token p2token;
 		int x;
 		int y;
-
-
+		Line2D tri;
 
 		public TsoroCell(int x, int y, int w, int h) {
 			this.x = x;
 			this.y = y;
-			this.area = new Rectangle2D.Double(x, y, w, h);
+			this.tri = new Line2D.Double(x, y, w, h);
+			this.area = new Ellipse2D.Double(x, y, w, h);
 			this.mouseHover = false;
 			this.mouseHover2 = false;
 			this.symbol = TMark.Empty;
 			this.display = new TextBox("_");
-			this.p2token= new Token (Color.blue);
-			this.p1token=new Token (Color.red);
-
+			this.p2token = new Token (Color.blue);
+			this.p1token = new Token (Color.red);
 		}
-
-
+		
 
 		public int hashCode() {
 			return Integer.hashCode(x) + Integer.hashCode(y);
@@ -193,20 +150,18 @@ public class TsoroGame extends GFX {
 		}
 
 		public void draw(Graphics2D g) {
-			
-
 			if (mouseHover2) {
 				g.setColor(Color.cyan);
 			} else if (this.symbol == TMark.Empty && mouseHover) {
 				g.setColor(Color.green);
 			} else {
-				g.setColor(Color.yellow);
+				g.setColor(new Color(222,184,135)); // brlywood
 			}
 			g.fill(this.area);
-
+			
 			switch (this.symbol) {
 			case Empty:
-				this.display.setString("_");
+				this.display.setString(" ");
 				break;
 			case Player1:
 				this.p1token.draw(g, area);
@@ -214,18 +169,10 @@ public class TsoroGame extends GFX {
 			case Player2:
 				this.p2token.draw(g, area);
 				break;
-			
 			default:
 				break;
 			}
-			this.display.centerInside(this.area);
-			this.display.setFontSize(70.0);
-			this.display.setColor(Color.black);
-			this.display.draw(g);
-
 		}
-			
-
 
 		public boolean contains(IntPoint mouse) {
 			if (mouse == null) {
@@ -237,7 +184,7 @@ public class TsoroGame extends GFX {
 
 	public void setupGame() {
 		int size = this.getWidth() / 11;
-
+		
 		TsoroCell A = new TsoroCell(5 * size, 1 * size, size - 2, size - 2);
 		this.grid.add(A);
 		neighborsB.add(A);
@@ -297,7 +244,6 @@ public class TsoroGame extends GFX {
 		if (this.state.isPlaying()) {
 			for (TsoroCell cell : this.getAllCells()) {
 				cell.mouseHover = cell.contains(mouse);
-
 				if (cell.inPlay() && cell.contains(click)) {
 					// More intelligence needed:
 					if (this.state == TState.Player1Turn) {
@@ -318,20 +264,23 @@ public class TsoroGame extends GFX {
 				}
 			}
 		} else {
-
-
-
-//			if (click != null) {
-//				this.state = TState.Player1Turn;
-//				this.grid.clear();
-//				this.setupGame();
-//			}
+			if (click != null && ( (this.state == TState.Player1Win) || (this.state == TState.Player2Win) ) ) {
+				this.state = TState.Player1Turn;
+				this.grid.clear();
+				this.setupGame();
+			}
 		}
 
 		if (stateChanged) {
-			if (this.player1Wins()) {
+			if (this.playerWins(TMark.Player1)) {
+				p1Tokens = 0;
+				p2Tokens = 0;
+				p1score += 1;
 				this.state = TState.Player1Win;
-			} else if (this.player2Wins()) {
+			} else if (this.playerWins(TMark.Player2)) {
+				p1Tokens = 0;
+				p2Tokens = 0;
+				p2score += 1;
 				this.state = TState.Player2Win;
 			} else if (this.boardIsFull()) {
 				this.state = TState.MoveTokAround;
@@ -380,18 +329,22 @@ public class TsoroGame extends GFX {
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover2 = false;
 		}
-
+		
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover = cell.contains(mouse);
 			List<TsoroCell> adjacents = this.neighbors.get(cell);
-			//System.out.println(this.neighbors.get(cell));
 			if (cell.mouseHover) {
 				for (TsoroCell n : adjacents) {
-					n.mouseHover2 = true;
+					if(!cell.inPlay()) {
+						if(n.inPlay()) {
+							n.mouseHover2 = true;
+						}
+					}
 				}
 			}
-
-			if (!cell.inPlay() && cell.contains(click)) {
+			
+			if(cell.inPlay() && cell.contains(click)) {
+				//if (cell.inPlay() && cell.contains(click)) {
 				System.out.println("Cell: "+cell);
 				TMark usedToBe = cell.symbol;
 				cell.symbol = TMark.Empty;
@@ -415,19 +368,27 @@ public class TsoroGame extends GFX {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(Color.white);
+		g.setColor(new Color(255,235,205)); // blanched almond
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		// g.fillOval(0, 0, this.getWidth(), this.getHeight());
+
+		g.setColor(Color.black);
+		g.setStroke(new BasicStroke(6));
+		
+		// https://stackoverflow.com/questions/29447994/how-do-i-draw-a-triangle-in-java
+		g.drawPolygon(new int[] {this.getWidth()-70, 60, this.getWidth()/2}, new int[] {250, 250, 65}, 3);
+		g.drawLine((this.getWidth()-5)/2, 60, (this.getWidth()-5)/2, 250);
+		g.drawLine(150, 160, 350, 160);
 
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.draw(g);
 		}
-
-		g.setColor(Color.black);
-
-		Rectangle2D centerText = new Rectangle2D.Double(0, this.getHeight() * 3 / 4, this.getWidth(),
-				this.getHeight() / 4);
-		this.message.setFontSize(35.0);
+		
+		Rectangle2D centerText = new Rectangle2D.Double(10, this.getHeight() * 3 / 4, this.getWidth()-20,
+				this.getHeight() / 4-10); 
+		g.setPaint(new Color(0, 128, 128)); // nlue-greem
+		g.fill(centerText);
+		
+		this.message.setFontSize(30.0);
 		this.message.setColor(Color.black);
 		this.message.centerInside(centerText);
 		this.message.draw(g);
