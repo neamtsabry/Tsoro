@@ -228,17 +228,19 @@ public class TsoroGame extends GFX {
 		
 		neighbors.put(A, neighborsA);
 		neighbors.put(B, neighborsB);
-		neighbors.put(C, neighborsA);
-		neighbors.put(D, neighborsA);
-		neighbors.put(E, neighborsA);
-		neighbors.put(F, neighborsA);
-		neighbors.put(G, neighborsA);
+		neighbors.put(C, neighborsC);
+		neighbors.put(D, neighborsD);
+		neighbors.put(E, neighborsE);
+		neighbors.put(F, neighborsF);
+		neighbors.put(G, neighborsG);
 	}
 
 	@Override
 	public void update(double time) {
 		IntPoint mouse = this.getMouseLocation();
 		IntPoint click = this.processClick();
+
+		hoverNeighbors();
 
 		boolean stateChanged = false;
 		if (this.state.isPlaying()) {
@@ -303,7 +305,7 @@ public class TsoroGame extends GFX {
 			break;
 		case MoveTokAround:
 			this.message.setString("Match pieces by moving them!");
-			adjSpace();
+			adjSpace(click);
 			break;
 		case OutOfMoves:
 			this.message.setString("Out of moves!");
@@ -322,28 +324,29 @@ public class TsoroGame extends GFX {
 		return null;
 	}
 
-	public void adjSpace() {
+	public void hoverNeighbors() {
 		IntPoint mouse = this.getMouseLocation();
-		IntPoint click = this.processClick();
-		
+
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover2 = false;
 		}
 		
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover = cell.contains(mouse);
-			List<TsoroCell> adjacents = this.neighbors.get(cell);
 			if (cell.mouseHover) {
+				List<TsoroCell> adjacents = this.neighbors.get(cell);
 				for (TsoroCell n : adjacents) {
-					if(!cell.inPlay()) {
-						if(n.inPlay()) {
-							n.mouseHover2 = true;
-						}
-					}
+					n.mouseHover2 = true;
 				}
 			}
-			
-			if(cell.inPlay() && cell.contains(click)) {
+		}
+	}
+
+	public void adjSpace(IntPoint click) {
+		for (TsoroCell cell : this.getAllCells()) {
+			System.out.println("Cell: "+!cell.inPlay()+", "+cell.contains(click));
+			if(!cell.inPlay() && cell.contains(click)) {
+				List<TsoroCell> adjacents = this.neighbors.get(cell);
 				//if (cell.inPlay() && cell.contains(click)) {
 				System.out.println("Cell: "+cell);
 				TMark usedToBe = cell.symbol;
