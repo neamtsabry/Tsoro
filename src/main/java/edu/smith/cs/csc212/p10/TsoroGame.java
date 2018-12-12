@@ -41,7 +41,9 @@ public class TsoroGame extends GFX {
 
 	TState state = TState.Player1Turn;
 	List<TsoroCell> grid = new ArrayList<>();
-	TextBox message = new TextBox("Hello World!");
+	TextBox message = new TextBox("Blah? Blah.");
+	TextBox score = new TextBox("Why don't they have eyes?!");
+	TextBox score2 = new TextBox("But man was not made for defeat.");
 	
 	public List<TsoroCell> getAllCells() {
 		return grid;
@@ -58,21 +60,14 @@ public class TsoroGame extends GFX {
 		return true;
 	}
 
-	public static boolean tokensFinished() {
-		// tokenCount-=1;
-		System.out.println("p1 has" + p1Tokens);
-		System.out.println("p2 has" + p2Tokens);
-
-		if (p1Tokens + p2Tokens >= 6) {
-			p1Tokens = 0;
-			p2Tokens = 0;
+	public boolean tokensFinished() {
+		if (p1Tokens == 3 && p2Tokens == 3) {
 			return true;
 		}
 		return false;
 	}
 
 	public boolean playerWins(TMark player) {
-//		p2Tokens-=1;
 		List<TsoroCell> midRow = Arrays.asList(this.grid.get(1), this.grid.get(2),
 				this.grid.get(3));
 		if (allMarked(midRow, player)) {
@@ -89,11 +84,13 @@ public class TsoroGame extends GFX {
 		if (allMarked(leftRightD, player)) {
 			return true;
 		}
+		
 		List<TsoroCell> rightLeftD = Arrays.asList(this.grid.get(0), this.grid.get(3),
 				this.grid.get(6));
 		if (allMarked(rightLeftD, player)) {
 			return true;
 		}
+		
 		List<TsoroCell> verticalD = Arrays.asList(this.grid.get(0), this.grid.get(2),
 				this.grid.get(5));
 		if (allMarked(verticalD, player)) {
@@ -101,10 +98,6 @@ public class TsoroGame extends GFX {
 		}
 
 		return false;
-	}
-
-	public boolean boardIsFull() {
-		return tokensFinished();
 	}
 
 	static class TsoroCell {
@@ -128,8 +121,8 @@ public class TsoroGame extends GFX {
 			this.mouseHover2 = false;
 			this.symbol = TMark.Empty;
 			this.display = new TextBox("_");
-			this.p2token = new Token (Color.blue);
-			this.p1token = new Token (Color.red);
+			this.p2token = new Token (new Color(0, 0, 150));
+			this.p1token = new Token (new Color(150, 0, 0));
 		}
 		
 
@@ -228,64 +221,76 @@ public class TsoroGame extends GFX {
 		
 		neighbors.put(A, neighborsA);
 		neighbors.put(B, neighborsB);
-		neighbors.put(C, neighborsA);
-		neighbors.put(D, neighborsA);
-		neighbors.put(E, neighborsA);
-		neighbors.put(F, neighborsA);
-		neighbors.put(G, neighborsA);
+		neighbors.put(C, neighborsC);
+		neighbors.put(D, neighborsD);
+		neighbors.put(E, neighborsE);
+		neighbors.put(F, neighborsF);
+		neighbors.put(G, neighborsG);
 	}
-
+	
+	public void restart() {
+		this.grid.clear();
+		this.setupGame();
+		this.state = TState.Player1Turn;
+	}
+	
 	@Override
 	public void update(double time) {
 		IntPoint mouse = this.getMouseLocation();
 		IntPoint click = this.processClick();
-
-		boolean stateChanged = false;
-		if (this.state.isPlaying()) {
-			for (TsoroCell cell : this.getAllCells()) {
-				cell.mouseHover = cell.contains(mouse);
-				if (cell.inPlay() && cell.contains(click)) {
-					// More intelligence needed:
-					if (this.state == TState.Player1Turn) {
-						p1Tokens += 1;
-						cell.symbol = TMark.Player1;
-						this.state = TState.Player2Turn;
-						stateChanged = true;
-					} else if (this.state == TState.Player2Turn) {
-						p2Tokens += 1;
-						cell.symbol = TMark.Player2;
-						this.state = TState.Player1Turn;
-						stateChanged = true;
-					} else {
-						cell.symbol = TMark.Empty;
-						this.state = TState.MoveTokAround;
-						stateChanged = true;
-					}
-				}
+		
+		if (this.tokensFinished()) {
+			if (!this.hasAnyMoves()) {
+				this.state = TState.OutOfMoves;
+			} else {
+				adjSpace(click);
 			}
 		} else {
-			if (click != null && ( (this.state == TState.Player1Win) || (this.state == TState.Player2Win) ) ) {
-				this.state = TState.Player1Turn;
-				this.grid.clear();
-				this.setupGame();
+			if (this.state.isPlaying()) {
+				for (TsoroCell cell : this.getAllCells()) {
+					cell.mouseHover = cell.contains(mouse);
+					if (cell.inPlay() && cell.contains(click)) {
+						// More intelligence needed:
+						if (this.state == TState.Player1Turn) {
+							p1Tokens += 1;
+							cell.symbol = TMark.Player1;
+							this.state = TState.Player2Turn;
+						} else if (this.state == TState.Player2Turn) {
+							p2Tokens += 1;
+							cell.symbol = TMark.Player2;
+							this.state = TState.Player1Turn;
+						} else if (this.state == TState.OutOfMoves) {
+							this.state = TState.Player1Turn;
+						}
+					}
+				}
+			} else {
+				if (click != null && (( (this.state == TState.Player1Win) || (this.state == TState.Player2Win) 
+			|| (this.state == TState.OutOfMoves)))) {
+					this.state = TState.Player1Turn;
+					this.grid.clear();
+					this.setupGame();
+				}
 			}
 		}
 
-		if (stateChanged) {
-			if (this.playerWins(TMark.Player1)) {
-				p1Tokens = 0;
-				p2Tokens = 0;
-				p1score += 1;
-				this.state = TState.Player1Win;
-			} else if (this.playerWins(TMark.Player2)) {
-				p1Tokens = 0;
-				p2Tokens = 0;
-				p2score += 1;
-				this.state = TState.Player2Win;
-			} else if (this.boardIsFull()) {
-				this.state = TState.MoveTokAround;
-			}
+		if (this.playerWins(TMark.Player1)) {
+			p1Tokens = 0;
+			p2Tokens = 0;
+			// p1score += 1;
+
+			this.state = TState.Player1Win;
+		} else if (this.playerWins(TMark.Player2)) {
+			p1Tokens = 0;
+			p2Tokens = 0;
+			// p2score += 1;
+
+			this.state = TState.Player2Win;
 		}
+		
+		
+		this.score.setString("Player 1 tokens:" + p1Tokens);
+		this.score2.setString("Player 2 tokens:" + p2Tokens);
 
 		// Set message based on state!
 		switch (this.state) {
@@ -300,10 +305,6 @@ public class TsoroGame extends GFX {
 			break;
 		case Player2Win:
 			this.message.setString("Player 2 Has Won");
-			break;
-		case MoveTokAround:
-			this.message.setString("Match pieces by moving them!");
-			adjSpace();
 			break;
 		case OutOfMoves:
 			this.message.setString("Out of moves!");
@@ -321,10 +322,33 @@ public class TsoroGame extends GFX {
 		}
 		return null;
 	}
+	
+	public boolean hasAnyMoves() {
+		// if we're not even in adjSpace, you can keep playing
+		if (!this.tokensFinished()) {
+			return true;
+		}
+		
+		// moves available if you can swap:
+		if(this.state == TState.Player1Turn || this.state == TState.Player2Turn) {
+			TMark marker = this.state.getMarkForTurn();
+			for (TsoroCell cell : this.getAllCells()) {
+				if (cell.symbol == marker) {
+					List<TsoroCell> adjacents = this.neighbors.get(cell);
+					TsoroCell bestNeighbor = findEmpty(adjacents);
+					if (bestNeighbor != null) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		// could not find any legal swaps.
+		return false;
+	}
 
-	public void adjSpace() {
+	public void adjSpace(IntPoint click) {
 		IntPoint mouse = this.getMouseLocation();
-		IntPoint click = this.processClick();
 		
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover2 = false;
@@ -333,34 +357,36 @@ public class TsoroGame extends GFX {
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover = cell.contains(mouse);
 			List<TsoroCell> adjacents = this.neighbors.get(cell);
+			TsoroCell bestNeighbor = findEmpty(adjacents);
+			
 			if (cell.mouseHover) {
 				for (TsoroCell n : adjacents) {
 					if(!cell.inPlay()) {
-						if(n.inPlay()) {
-							n.mouseHover2 = true;
-						}
+						n.mouseHover2 = true;
 					}
 				}
 			}
 			
-			if(cell.inPlay() && cell.contains(click)) {
-				//if (cell.inPlay() && cell.contains(click)) {
+			if(!cell.inPlay() && cell.contains(click)) {
 				System.out.println("Cell: "+cell);
-				TMark usedToBe = cell.symbol;
-				cell.symbol = TMark.Empty;
-				TsoroCell bestNeighbor = findEmpty(adjacents);
-
 				if (bestNeighbor == null) {
 					continue;
 				}
 				
-				if (usedToBe == TMark.Player2) {
-						// move cell to the n spot 
-						cell.symbol = TMark.Player2;
-						this.state = TState.Player1Turn;
-				} else if (usedToBe == TMark.Player1){
-						cell.symbol = TMark.Player1;
+				if(this.state == TState.Player1Turn) {
+					if(cell.symbol == TMark.Player1) {
+						cell.symbol = TMark.Empty;
+						bestNeighbor.symbol = TMark.Player1;
 						this.state = TState.Player2Turn;
+					}
+				}	
+				
+				if(this.state == TState.Player2Turn) {
+					if(cell.symbol == TMark.Player2) {
+						cell.symbol = TMark.Empty;
+						bestNeighbor.symbol = TMark.Player2;
+						this.state = TState.Player1Turn;
+					}
 				}
 			}
 		}
@@ -385,13 +411,29 @@ public class TsoroGame extends GFX {
 		
 		Rectangle2D centerText = new Rectangle2D.Double(10, this.getHeight() * 3 / 4, this.getWidth()-20,
 				this.getHeight() / 4-10); 
-		g.setPaint(new Color(0, 128, 128)); // nlue-greem
+		g.setPaint(new Color(0, 128, 128)); // blue-green
 		g.fill(centerText);
 		
 		this.message.setFontSize(30.0);
 		this.message.setColor(Color.black);
 		this.message.centerInside(centerText);
 		this.message.draw(g);
+		
+		Rectangle2D centerText2 = new Rectangle2D.Double(20, this.getHeight() * 3 / 4, (this.getWidth()-20)/3,
+				(this.getHeight() / 4-10)/4); 
+		
+		this.score.setFontSize(20.0);
+		this.score.setColor(Color.black);
+		this.score.centerInside(centerText2);
+		this.score.draw(g);
+		
+		Rectangle2D centerText3 = new Rectangle2D.Double(150, this.getHeight() * 3 / 4, this.getWidth(),
+				(this.getHeight() / 4-10)/4); 
+		
+		this.score2.setFontSize(20.0);
+		this.score2.setColor(Color.black);
+		this.score2.centerInside(centerText3);
+		this.score2.draw(g);
 	}
 
 	public static void main(String[] args) {
