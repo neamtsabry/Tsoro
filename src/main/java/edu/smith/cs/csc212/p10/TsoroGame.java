@@ -297,6 +297,15 @@ public class TsoroGame extends GFX {
 		neighbors.put(G, neighborsG);
 
 	}
+	public void restart() {
+		this.grid.clear();
+		this.setupGame();
+		this.state = TState.HomePage;
+	}
+	public void endGame() {
+		this.stop();
+	}
+
 
 	@Override
 	public void update(double time) {
@@ -309,6 +318,21 @@ public class TsoroGame extends GFX {
 
 		IntPoint mouse = this.getMouseLocation();
 		IntPoint click = this.processClick();
+		
+		if (click != null && startButton.contains(click)) {
+			System.out.println("restart");
+			restart();
+
+
+			return;
+		}
+
+		else if (click != null && quitButton.contains(click)) {
+			System.out.println("quit");
+endGame();
+			this.stop();
+
+		}
 
 		boolean stateChanged = false;
 		if (this.state.isPlaying()) {
@@ -441,6 +465,9 @@ public class TsoroGame extends GFX {
 		}
 	}
 
+	Rectangle2D startButton = new Rectangle2D.Double(350, 380, 140, 30);
+	Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
+	
 	@Override
 	public void draw(Graphics2D g) {
 		if (this.state == TState.HomePage) {
@@ -477,7 +504,6 @@ public class TsoroGame extends GFX {
 		this.message.setColor(Color.black);
 		this.message.centerInside(centerText);
 		this.message.draw(g);
-		Rectangle2D startButton = new Rectangle2D.Double(350, 380, 140, 30);
 		g.setPaint(new Color(150, 0, 0));// Color.red);// new Color(0, 128, 128)); // nlue-greem
 		g.fill(startButton);
 
@@ -488,7 +514,6 @@ public class TsoroGame extends GFX {
 		nameInput.centerInside(startButton);
 		nameInput.draw(g);
 
-		Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
 		g.setPaint(new Color(150, 0, 0));// Color.red);// new Color(0, 128, 128)); // nlue-greem
 		g.fill(quitButton);
 
@@ -499,20 +524,7 @@ public class TsoroGame extends GFX {
 		quit.centerInside(quitButton);
 		quit.draw(g);
 
-		IntPoint click = this.processClick();
-		if (click != null && startButton.contains(click)) {
-			System.out.println("quit");
-			this.state = TState.HomePage;
-			TsoroGame app = new TsoroGame();
-			app.start();
-
-			return;
-		}
-
-		else if (click != null && quitButton.contains(click)) {
-			this.stop();
-
-		}
+		
 	}
 
 	public void drawHomePage(Graphics2D g) {
@@ -673,7 +685,7 @@ public class TsoroGame extends GFX {
 		}
 
 		else if (click != null && quitButton.contains(click)) {
-			this.stop();
+			endGame();
 
 //		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 		} else if (click != null && infoButton.contains(click)) {
