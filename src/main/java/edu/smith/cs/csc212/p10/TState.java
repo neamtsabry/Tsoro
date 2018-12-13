@@ -6,7 +6,7 @@ public enum TState {
 	Player1Turn, 
 	Player2Turn, 
 	OutOfMoves, 
-	Player1Win, 
+	Player1Win,
 	Player2Win 
 	;
 
