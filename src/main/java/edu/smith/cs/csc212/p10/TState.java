@@ -1,12 +1,13 @@
 package edu.smith.cs.csc212.p10;
 
 public enum TState {
-
-	Player1Turn, // 0
-	Player2Turn, // 1
+	
+	HomePage,
+	Player1Turn, 
+	Player2Turn, 
 	OutOfMoves, 
-	Player1Win, // 3
-	Player2Win // 4
+	Player1Win, 
+	Player2Win 
 	;
 
 	public boolean isPlaying() {
