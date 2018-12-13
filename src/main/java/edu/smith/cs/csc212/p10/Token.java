@@ -14,13 +14,12 @@ public class Token {
 	}
 
 	
-	public Shape draw(Graphics2D g, Rectangle2D area) {
+	public Shape draw(Graphics2D g,Ellipse2D area) {
 		// Draw the token.
 		
 		g.setColor(color);
 		
-		Shape circ = new Ellipse2D.Double(area.getX(), area.getY(), area.getWidth(), area.getHeight());
-
+		Shape circ = new Ellipse2D.Double(area.getX()+10, area.getY()+10, area.getWidth()-20, area.getHeight()-20);
 		g.fill(circ);
 		g.draw(circ);
 		return circ;
