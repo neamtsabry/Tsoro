@@ -34,14 +34,6 @@ public class TsoroGame extends GFX {
 	public static int p2Tokens = 0;
 
 
-	public List<TsoroCell> neighborsA = new ArrayList<>();
-	public List<TsoroCell> neighborsB = new ArrayList<>();
-	public List<TsoroCell> neighborsC = new ArrayList<>();
-	public List<TsoroCell> neighborsD = new ArrayList<>();
-	public List<TsoroCell> neighborsE = new ArrayList<>();
-	public List<TsoroCell> neighborsF = new ArrayList<>();
-	public List<TsoroCell> neighborsG = new ArrayList<>();
-
 	public Map<TsoroCell, List<TsoroCell>> neighbors = new HashMap<>();
 
 	TState state = TState.HomePage;
