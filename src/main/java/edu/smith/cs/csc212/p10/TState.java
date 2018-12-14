@@ -29,6 +29,6 @@ public enum TState {
 		} else if (this == Player2Turn) {
 			return TMark.Player2;
 		}
-		throw new IllegalStateException("Must be player1 or 2 turn to get a mark!");
+		throw new IllegalStateException("Must be player 1's or 2's turn to get a mark!");
 	}
 }
