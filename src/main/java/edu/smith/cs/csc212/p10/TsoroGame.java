@@ -32,8 +32,6 @@ public class TsoroGame extends GFX {
 
 	// Number of tokens Player1 and Player2 has while playing
 	// Value increases every time users use their token
-//	public static int p1Tokens = 0;
-//	public static int p2Tokens = 0;
 	public static int p1Tokens;
 	public static int p2Tokens;
 
