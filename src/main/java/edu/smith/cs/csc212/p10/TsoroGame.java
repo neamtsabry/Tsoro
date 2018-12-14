@@ -45,8 +45,8 @@ public class TsoroGame extends GFX {
 	}
 
 	// initialize token numbers at 0 
-	public static int p1Tokens = 0;
-	public static int p2Tokens = 0;
+	public static int p1Tokens;
+	public static int p2Tokens;
 
 	public Map<TsoroCell, List<TsoroCell>> neighbors = new HashMap<>();
 
