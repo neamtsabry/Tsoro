@@ -4,7 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.event.WindowEvent;
+
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 
@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -30,18 +30,27 @@ public class TsoroGame extends GFX {
 		this.setupGame();
 	}
 
-	public static int p1Tokens = 0;
-	public static int p2Tokens = 0;
+	// Number of tokens Player1 and Player2 has while playing
+	// Value increases every time users use their token
+//	public static int p1Tokens = 0;
+//	public static int p2Tokens = 0;
+	public static int p1Tokens;
+	public static int p2Tokens;
 
 
+	//HashMap containing each cell in the grid and their corresponding neighbors (i.e. adjacent cells)
+	//Key:cell, Value: list of neighboring cells 
 	public Map<TsoroCell, List<TsoroCell>> neighbors = new HashMap<>();
+
 
 	TState state = TState.HomePage;
 	boolean showInfo = false;
+	
+	//list of cells that make up the 'board' of the game
 	List<TsoroCell> grid = new ArrayList<>();
+	
 	TextBox message = new TextBox("Hello World!");
 	TextBox startMessage = new TextBox("TSORO");
-	
 	TextBox tokMssg = new TextBox("Why don't they have eyes?!");
 	TextBox tok2Mssg = new TextBox("But man was not made for defeat.");
 	
@@ -49,7 +58,6 @@ public class TsoroGame extends GFX {
 	ImageIcon icon = new ImageIcon("Capture.png");
 
 	// Prompt the user to enter their name
-
 	String name1 = (String) JOptionPane.showInputDialog(new JFrame(), "Enter Player1's name:", "Tsoro",
 			JOptionPane.QUESTION_MESSAGE, icon, null, "");
 	String name2 = (String) JOptionPane.showInputDialog(new JFrame(), "Enter Player2's name:", "Tsoro",
@@ -59,10 +67,18 @@ public class TsoroGame extends GFX {
 	String nameCap1 = name1.substring(0, 1).toUpperCase() + name1.substring(1);
 	String nameCap2 = name2.substring(0, 1).toUpperCase() + name2.substring(1);
 
+	/**
+	 * Get all the cells on the TsoroBoard.
+	 * @return the list of TsoroCells
+	 */
 	public List<TsoroCell> getAllCells() {
 		return grid;
 	}
 
+	/**
+	 * Check whether 3 cells in a row have the same mark.
+	 * @return true if all 3 cells in a row have the same mark. 
+	 */
 	public boolean allMarked(List<TsoroCell> row, TMark marker) {
 		for (TsoroCell cell : row) {
 			if (cell.symbol == marker) {
@@ -74,6 +90,11 @@ public class TsoroGame extends GFX {
 		return true;
 	}
 
+	/**
+	 * Check whether both players have used up all their tokens.
+	 * Each player has a total of 3 tokens.
+	 * @return true if both players have used up all their tokens. 
+	 */
 	public static boolean tokensFinished() {
 		// tokenCount-=1;
 		if (p1Tokens == 3 && p2Tokens == 3) {
@@ -82,6 +103,10 @@ public class TsoroGame extends GFX {
 		return false;
 	}
 
+	/**
+	 * Check whether a match has been made and hence, whether a player has won the game. 
+	 * @return true if a match has been made. 
+	 */
 	public boolean playerWins(TMark player) {
 //		p2Tokens-=1;
 		List<TsoroCell> midRow = Arrays.asList(this.grid.get(1), this.grid.get(2), this.grid.get(3));
@@ -148,6 +173,7 @@ public class TsoroGame extends GFX {
 			return name.hashCode();
 		}
 
+		
 		public boolean equals(Object other) {
 			if (other instanceof TsoroCell) {
 				TsoroCell place = (TsoroCell) other;
@@ -160,13 +186,20 @@ public class TsoroGame extends GFX {
 			return symbol == TMark.Empty;
 		}
 
+		/**
+		 * Draws Tsoro cells, player tokens.
+		 * @return the list of TsoroCells
+		 */
 		public void draw(Graphics2D g) {
-
+			//if mouseHover2==true, color the cell on top which the mouse is hovering and its neighbors cyan
 			if (mouseHover2) {
 				g.setColor(Color.cyan);
-			} else if (this.symbol == TMark.Empty && mouseHover) {
+			} 
+			//if the cell is empty and the mouse is hovering over it, color the cell green
+			else if (this.symbol == TMark.Empty && mouseHover) {
 				g.setColor(Color.green);
-			} else {
+			}
+			else {
 				g.setColor(new Color(222, 184, 135)); // brlywood
 			}
 			g.fill(this.area);
@@ -176,9 +209,11 @@ public class TsoroGame extends GFX {
 				this.display.setString(" ");
 				break;
 			case Player1:
+				// if player1 clicks on an empty cell, draw a red token within the cell
 				this.p1token.draw(g, area);
 				break;
 			case Player2:
+				//if player2 clicks on an empty cell, draw a blue token within the cell
 				this.p2token.draw(g, area);
 				break;
 			default:
@@ -186,6 +221,10 @@ public class TsoroGame extends GFX {
 			}
 		}
 
+		/**
+		 * Check whether a match has been made and hence, whether a player has won the game. 
+		 * @return true if a match has been made. 
+		 */
 		public boolean contains(IntPoint mouse) {
 			if (mouse == null) {
 				return false;
@@ -195,6 +234,8 @@ public class TsoroGame extends GFX {
 	}
 
 	public void setupGame() {
+		
+		//Lists of neighbors of each cell:
 		List<TsoroCell> neighborsA = new ArrayList<>();
 		List<TsoroCell> neighborsB = new ArrayList<>();
 		List<TsoroCell> neighborsC = new ArrayList<>();
