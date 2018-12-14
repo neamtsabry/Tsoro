@@ -32,7 +32,6 @@ public class TsoroGame extends GFX {
 
 	public static int p1Tokens = 0;
 	public static int p2Tokens = 0;
-
 	public Map<TsoroCell, List<TsoroCell>> neighbors = new HashMap<>();
 	// The game starts at the Homepage
 	TState state = TState.HomePage;
@@ -42,7 +41,8 @@ public class TsoroGame extends GFX {
 	TextBox startMessage = new TextBox("TSORO");
 	TextBox tokMssg = new TextBox("Why don't they have eyes?!");
 	TextBox tok2Mssg = new TextBox("But man was not made for defeat.");
-// Custom icon for JOptionPane.showInputDialog
+
+	// Custom icon for JOptionPane.showInputDialog
 	ImageIcon icon = new ImageIcon("Capture.png");
 
 // Prompt the user to enter their name
@@ -52,7 +52,7 @@ public class TsoroGame extends GFX {
 	String name2 = (String) JOptionPane.showInputDialog(new JFrame(), "Enter Player2's name:", "Tsoro",
 			JOptionPane.QUESTION_MESSAGE, icon, null, "");
 
-// Capitalize the first alphabet of the user's name
+	// Capitalize the first alphabet of the user's name
 	String nameCap1 = name1.substring(0, 1).toUpperCase() + name1.substring(1);
 	String nameCap2 = name2.substring(0, 1).toUpperCase() + name2.substring(1);
 
@@ -72,6 +72,7 @@ public class TsoroGame extends GFX {
 	}
 
 	public static boolean tokensFinished() {
+
 		if (p1Tokens == 3 && p2Tokens == 3) {
 			return true;
 		}
@@ -185,10 +186,11 @@ public class TsoroGame extends GFX {
 			return this.area.contains(mouse);
 		}
 	}
-/**
- * Sets up game by creating individual tokens 
- * and mapping each token to its neighboring tokens
- */
+
+	/**
+	 * Sets up game by creating individual tokens and mapping each token to its
+	 * neighboring tokens
+	 */
 	public void setupGame() {
 		List<TsoroCell> neighborsA = new ArrayList<>();
 		List<TsoroCell> neighborsB = new ArrayList<>();
@@ -197,10 +199,13 @@ public class TsoroGame extends GFX {
 		List<TsoroCell> neighborsE = new ArrayList<>();
 		List<TsoroCell> neighborsF = new ArrayList<>();
 		List<TsoroCell> neighborsG = new ArrayList<>();
+
 		p1Tokens = 0;
 		p2Tokens = 0;
+
 		this.state = TState.HomePage;
 		this.grid.clear();
+
 		int size = this.getWidth() / 11;
 
 		TsoroCell A = new TsoroCell("A", 5 * size, 1 * size, size - 2, size - 2);
@@ -224,6 +229,7 @@ public class TsoroGame extends GFX {
 		neighborsD.add(C);
 
 		TsoroCell D = new TsoroCell("D", 7 * size, 3 * size, size - 2, size - 2);
+
 		this.grid.add(D);
 		neighborsA.add(D);
 		neighborsG.add(D);
@@ -247,7 +253,9 @@ public class TsoroGame extends GFX {
 		this.grid.add(G);
 		neighborsD.add(G);
 		neighborsF.add(G);
-		//Adds each token and its neighbors into a Hashmap
+
+		// Adds each token and its neighbors into a Hashmap
+
 		neighbors.put(A, neighborsA);
 		neighbors.put(B, neighborsB);
 		neighbors.put(C, neighborsC);
@@ -259,6 +267,7 @@ public class TsoroGame extends GFX {
 	}
 
 //restarts the game
+
 	public void restart() {
 		this.grid.clear();
 		this.setupGame();
@@ -266,7 +275,9 @@ public class TsoroGame extends GFX {
 	}
 
 //ends the gamee when the user ckicks quit
+
 	public void endGame() {
+
 		this.stop();
 	}
 
@@ -292,6 +303,7 @@ public class TsoroGame extends GFX {
 			this.stop();
 
 		}
+
 		if (this.tokensFinished()) {
 			if (!this.hasAnyMoves()) {
 				for (TsoroCell c : this.getAllCells()) {
@@ -308,7 +320,7 @@ public class TsoroGame extends GFX {
 				for (TsoroCell cell : this.getAllCells()) {
 					cell.mouseHover = cell.contains(mouse);
 					if (cell.inPlay() && cell.contains(click)) {
-// More intelligence needed:
+						// More intelligence needed:
 						if (this.state == TState.Player1Turn) {
 							System.out.println("P1: " + cell.name);
 							p1Tokens += 1;
@@ -326,6 +338,7 @@ public class TsoroGame extends GFX {
 				}
 			}
 		}
+
 		if (click != null && (this.state == TState.Player1Win || this.state == TState.Player2Win
 				|| this.state == TState.OutOfMoves)) {
 			this.setupGame();
@@ -335,9 +348,11 @@ public class TsoroGame extends GFX {
 			this.state = TState.Player1Win;
 		} else if (this.playerWins(TMark.Player2)) {
 			this.state = TState.Player2Win;
+
 		}
-		this.tokMssg.setString("Player 1 tokens:" + p1Tokens);
-		this.tok2Mssg.setString("Player 2 tokens:" + p2Tokens);
+
+		this.tokMssg.setString(nameCap1 + "'s red tokens:" + p1Tokens);
+		this.tok2Mssg.setString(nameCap2 + "'s blue tokens:" + p2Tokens);
 
 // Set message based on state!
 		switch (this.state) {
@@ -371,11 +386,12 @@ public class TsoroGame extends GFX {
 	}
 
 	public boolean hasAnyMoves() {
-// keep playing if we haven't used all of our tokens
+		// keep playing if we haven't used all of our tokens
 		if (!this.tokensFinished()) {
 			return true;
 		}
-// moves available if you can swap:
+
+		// moves available if you can swap:
 		if (this.state == TState.Player1Turn || this.state == TState.Player2Turn) {
 			TMark marker = this.state.getMarkForTurn();
 			for (TsoroCell cell : this.getAllCells()) {
@@ -388,35 +404,42 @@ public class TsoroGame extends GFX {
 				}
 			}
 		}
-// could not find any legal swaps.
+
+		// could not find any legal swaps.
 		return false;
 	}
 
 	public void adjSpace(IntPoint click) {
 		IntPoint mouse = this.getMouseLocation();
+
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover2 = false;
 		}
+
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.mouseHover = cell.contains(mouse);
 			List<TsoroCell> adjacents = this.neighbors.get(cell);
 			TsoroCell bestNeighbor = findEmpty(adjacents);
+
 			if (cell.mouseHover) {
 				for (TsoroCell n : adjacents) {
 					n.mouseHover2 = true;
 				}
 			}
+
 			if (cell.symbol != TMark.Empty && cell.contains(click)) {
 				System.out.println("Cell: " + cell + " " + adjacents);
 				if (bestNeighbor == null) {
 					return;
 				}
+
 				System.out.println("swap(" + cell + ", " + bestNeighbor + ")");
 
 				if (cell.equals(bestNeighbor)) {
 					System.err.println("This should never happen!");
 					return;
 				}
+
 				if (this.state == TState.Player1Turn) {
 					if (cell.symbol == TMark.Player1) {
 						cell.symbol = TMark.Empty;
@@ -442,6 +465,7 @@ public class TsoroGame extends GFX {
 	/**
 	 * The draw method handles drawing of our grid and entire game
 	 */
+
 	@Override
 	public void draw(Graphics2D g) {
 		// homepage is always drawn first at the start of every game
@@ -490,6 +514,7 @@ public class TsoroGame extends GFX {
 		this.message.setColor(Color.black);
 		this.message.centerInside(centerText);
 		this.message.draw(g);
+
 		Rectangle2D centerText2 = new Rectangle2D.Double(20, this.getHeight() * 3 / 4, (this.getWidth() - 20) / 3,
 				(this.getHeight() / 4 - 10) / 4);
 		this.tokMssg.setFontSize(20.0);
@@ -506,6 +531,7 @@ public class TsoroGame extends GFX {
 		// Draws the start button which is responsible for restarting the game
 		Rectangle2D startButton = new Rectangle2D.Double(350, 410, 140, 30);
 		g.setPaint(new Color(150, 0, 0));
+
 		g.fill(startButton);
 
 		TextBox nameInput = new TextBox("Restart");
@@ -518,6 +544,7 @@ public class TsoroGame extends GFX {
 		// quit button is responsible for quiting the game
 		Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
 		g.setPaint(new Color(150, 0, 0));
+
 		g.fill(quitButton);
 
 		TextBox quit = new TextBox("Quit");
@@ -599,6 +626,7 @@ public class TsoroGame extends GFX {
 		welcome.draw(g);
 
 		// Start button to get game started!
+
 		Rectangle2D startButton = new Rectangle2D.Double(350, 380, 140, 30);
 		g.setPaint(new Color(150, 0, 0));
 		g.fill(startButton);
