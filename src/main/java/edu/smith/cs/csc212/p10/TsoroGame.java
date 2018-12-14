@@ -34,7 +34,7 @@ public class TsoroGame extends GFX {
 	public static int p2Tokens = 0;
 
 	public Map<TsoroCell, List<TsoroCell>> neighbors = new HashMap<>();
-	//The game starts at the Homepage
+	// The game starts at the Homepage
 	TState state = TState.HomePage;
 	boolean showInfo = false;
 	List<TsoroCell> grid = new ArrayList<>();
@@ -185,7 +185,10 @@ public class TsoroGame extends GFX {
 			return this.area.contains(mouse);
 		}
 	}
-
+/**
+ * Sets up game by creating individual tokens 
+ * and mapping each token to its neighboring tokens
+ */
 	public void setupGame() {
 		List<TsoroCell> neighborsA = new ArrayList<>();
 		List<TsoroCell> neighborsB = new ArrayList<>();
@@ -244,6 +247,7 @@ public class TsoroGame extends GFX {
 		this.grid.add(G);
 		neighborsD.add(G);
 		neighborsF.add(G);
+		//Adds each token and its neighbors into a Hashmap
 		neighbors.put(A, neighborsA);
 		neighbors.put(B, neighborsB);
 		neighbors.put(C, neighborsC);
@@ -253,12 +257,14 @@ public class TsoroGame extends GFX {
 		neighbors.put(G, neighborsG);
 
 	}
+
 //restarts the game
 	public void restart() {
 		this.grid.clear();
 		this.setupGame();
 		this.state = TState.HomePage;
 	}
+
 //ends the gamee when the user ckicks quit
 	public void endGame() {
 		this.stop();
@@ -266,7 +272,7 @@ public class TsoroGame extends GFX {
 
 	@Override
 	public void update(double time) {
-		//Only updates when we are outside of the HomePage
+		// Only updates when we are outside of the HomePage
 		if (this.state == TState.HomePage) {
 			return;
 		}
@@ -429,7 +435,7 @@ public class TsoroGame extends GFX {
 		}
 	}
 
-	//allows the start button and quitbutton to be accessible to the update method
+	// allows the start button and quitbutton to be accessible to the update method
 	Rectangle2D startButton = new Rectangle2D.Double(350, 410, 140, 30);
 	Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
 
@@ -438,24 +444,24 @@ public class TsoroGame extends GFX {
 	 */
 	@Override
 	public void draw(Graphics2D g) {
-		//homepage is always drawn first at the start of every game
+		// homepage is always drawn first at the start of every game
 		if (this.state == TState.HomePage) {
 			drawHomePage(g);
 			return;
 		}
-		
-		g.setColor(Color.black); 
+
+		g.setColor(Color.black);
 		g.fillOval(50, 280, 80, 20);
-		g.setColor(Color.black); 
+		g.setColor(Color.black);
 		g.fillOval(50, 250, 100, 20);
 
-		g.setColor(new Color(255, 235, 205)); 
+		g.setColor(new Color(255, 235, 205));
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
 		g.setColor(Color.black);
 		g.setStroke(new BasicStroke(6));
 
-		//This part is resposnible for drawing the gridlines 
+		// This part is resposnible for drawing the gridlines
 // https://stackoverflow.com/questions/29447994/how-do-i-draw-a-triangle-in-java
 		g.drawPolygon(new int[] { this.getWidth() - 70, 60, this.getWidth() / 2 }, new int[] { 250, 250, 65 }, 3);
 		g.drawLine((this.getWidth() - 5) / 2, 60, (this.getWidth() - 5) / 2, 250);
@@ -463,18 +469,18 @@ public class TsoroGame extends GFX {
 		g.drawLine(150, 160, (this.getWidth() - 5) / 2, 250);
 
 		g.drawLine(350, 160, (this.getWidth() - 5) / 2, 250);
-		
-		//draws all our cells onto the board
-		
+
+		// draws all our cells onto the board
+
 		for (TsoroCell cell : this.getAllCells()) {
 			cell.draw(g);
 		}
-		
+
 		/**
-		 * This is the green panel where we center all our game messages in
-		 * The rest of the rectangles are smaller ones to center other text in
+		 * This is the green panel where we center all our game messages in The rest of
+		 * the rectangles are smaller ones to center other text in
 		 */
-		
+
 		Rectangle2D centerText = new Rectangle2D.Double(10, this.getHeight() * 3 / 4, this.getWidth() - 20,
 				this.getHeight() / 4 - 10);
 		g.setPaint(new Color(0, 128, 128)); // nlue-greem
@@ -496,8 +502,8 @@ public class TsoroGame extends GFX {
 		this.tok2Mssg.setColor(Color.black);
 		this.tok2Mssg.centerInside(centerText3);
 		this.tok2Mssg.draw(g);
-		
-		//Draws the start button which is responsible for restarting the game
+
+		// Draws the start button which is responsible for restarting the game
 		Rectangle2D startButton = new Rectangle2D.Double(350, 410, 140, 30);
 		g.setPaint(new Color(150, 0, 0));
 		g.fill(startButton);
@@ -509,7 +515,7 @@ public class TsoroGame extends GFX {
 		nameInput.centerInside(startButton);
 		nameInput.draw(g);
 
-		//quit button is responsible for quiting the game
+		// quit button is responsible for quiting the game
 		Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
 		g.setPaint(new Color(150, 0, 0));
 		g.fill(quitButton);
@@ -521,7 +527,7 @@ public class TsoroGame extends GFX {
 		quit.centerInside(quitButton);
 		quit.draw(g);
 
-		//checks if we want to restart or quit the game, then does so
+		// checks if we want to restart or quit the game, then does so
 		IntPoint click = this.processClick();
 		if (click != null && startButton.contains(click)) {
 			System.out.println("quit");
@@ -537,13 +543,16 @@ public class TsoroGame extends GFX {
 
 		}
 	}
-/**
- * DrawHomepage creates the welcome page and gets the player ready to start the game 
- * @param g
- */
+
+	/**
+	 * DrawHomepage creates the welcome page and gets the player ready to start the
+	 * game
+	 * 
+	 * @param g
+	 */
 	public void drawHomePage(Graphics2D g) {
-		
-		//Tsoro title
+
+		// Tsoro title
 		TextBox startMessage = new TextBox("TSORO");
 		g.setColor(new Color(255, 235, 205)); // blanched almond
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -557,8 +566,8 @@ public class TsoroGame extends GFX {
 		g.setStroke(new BasicStroke(10));
 		g.fillOval(50, 242, 100, 50);
 		g.fillOval(50, 250, 100, 50);
-		
-		//drawing of tokens on the homepage
+
+		// drawing of tokens on the homepage
 		g.setColor(new Color(0, 0, 150));
 		g.setStroke(new BasicStroke(10));
 		g.fillOval(150, 220, 100, 50);
@@ -569,14 +578,14 @@ public class TsoroGame extends GFX {
 		g.fillOval(100, 280, 100, 50);
 		g.fillOval(100, 270, 100, 50);
 
-		//Drawing of the title, "Tsoro"
+		// Drawing of the title, "Tsoro"
 		startMessage.setFontSize(100.0);
 		startMessage.setFont(new Font("Algerian", Font.BOLD, 120));
 		startMessage.setColor(Color.black);
 		startMessage.centerInside(centerText);
 		startMessage.draw(g);
 
-		//This is the green panel where player information and insructions show up
+		// This is the green panel where player information and insructions show up
 		Rectangle2D centerText1 = new Rectangle2D.Double(10, this.getHeight() * 3 / 4, this.getWidth() - 20,
 				this.getHeight() / 4 - 10);
 
@@ -589,7 +598,7 @@ public class TsoroGame extends GFX {
 		welcome.centerInside(centerText1);
 		welcome.draw(g);
 
-		//Start button to get game started!
+		// Start button to get game started!
 		Rectangle2D startButton = new Rectangle2D.Double(350, 380, 140, 30);
 		g.setPaint(new Color(150, 0, 0));
 		g.fill(startButton);
@@ -600,7 +609,7 @@ public class TsoroGame extends GFX {
 		nameInput.centerInside(startButton);
 		nameInput.draw(g);
 
-		//Quit button to end the game and close window
+		// Quit button to end the game and close window
 		Rectangle2D quitButton = new Rectangle2D.Double(400, 450, 90, 15);
 		g.setPaint(new Color(150, 0, 0));// Color.red);// new Color(0, 128, 128)); // nlue-greem
 		g.fill(quitButton);
@@ -612,7 +621,7 @@ public class TsoroGame extends GFX {
 		quit.centerInside(quitButton);
 		quit.draw(g);
 
-		//Info button that will give instructions on How to play the game
+		// Info button that will give instructions on How to play the game
 		Rectangle2D infoButton = new Rectangle2D.Double(380, 420, 110, 20);
 		g.setPaint(new Color(150, 0, 0));
 		g.fill(infoButton);
@@ -623,7 +632,7 @@ public class TsoroGame extends GFX {
 		info.centerInside(infoButton);
 		info.draw(g);
 
-		//After user clicks for info, the instructions will be drawn onto screen
+		// After user clicks for info, the instructions will be drawn onto screen
 		if (this.showInfo) {
 			Rectangle2D box = new Rectangle2D.Double(0, 375, 500, 115);
 			g.setPaint(new Color(255, 235, 205)); // nlue-greem
@@ -674,7 +683,7 @@ public class TsoroGame extends GFX {
 			instructions4.centerInside(bound4);
 			instructions4.draw(g);
 
-			//Back button to allow user to return to start of homepage
+			// Back button to allow user to return to start of homepage
 			Rectangle2D backButton = new Rectangle2D.Double(435, 380, 55, 30);
 			g.setPaint(Color.red);
 			g.fill(backButton);
@@ -684,10 +693,10 @@ public class TsoroGame extends GFX {
 			back.setColor(Color.black);
 			back.centerInside(backButton);
 			back.draw(g);
-			
+
 			IntPoint click2 = this.processClick();
 
-			//If user clicks back, then they return to homepage
+			// If user clicks back, then they return to homepage
 			if (click2 != null && backButton.contains(click2)) {
 				this.showInfo = false;
 			}
@@ -695,18 +704,18 @@ public class TsoroGame extends GFX {
 		}
 
 		IntPoint click = this.processClick();
-		
-		//if user clicks start, game starts
+
+		// if user clicks start, game starts
 		if (click != null && startButton.contains(click)) {
 			this.state = TState.Player1Turn;
 
 			return;
 		}
-		//if user clicks quit, game ends and window closes.
+		// if user clicks quit, game ends and window closes.
 		else if (click != null && quitButton.contains(click)) {
 			endGame();
 
-		//gives option to show the info
+			// gives option to show the info
 		} else if (click != null && infoButton.contains(click)) {
 			this.showInfo = true;
 		}
