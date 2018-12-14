@@ -280,6 +280,11 @@ public class TsoroGame extends GFX {
 
 		}
 
+		/**
+		 * Check if mouse is in a certain area
+		 * @param mouse -- mouse
+		 * @return -- true if mouse is in area
+		 */
 		public boolean contains(IntPoint mouse) {
 
 			if (mouse == null) {
@@ -287,9 +292,7 @@ public class TsoroGame extends GFX {
 				return false;
 
 			}
-
 			return this.area.contains(mouse);
-
 		}
 
 	}
