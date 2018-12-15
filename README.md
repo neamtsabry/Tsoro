@@ -10,6 +10,10 @@ Tsoro is an African two-player strategy game, with its origin tracing back to Zi
 
 ![Image of home page](Images/2nd.png)
 
+# Then play along! 
+
 ![Image of home page](Images/3rd.png)
-![Image of home page](Images4th.png)
+
+![Image of home page](Images/4th.png)
+
 ![Image of home page](Images/5th.png)
